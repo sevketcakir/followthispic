@@ -88,16 +88,25 @@ void Kalibrasyon(unsigned EEPROMYaz)
 }
 
 void main() {
+unsigned int i;
 int BeyazSensorSayisi=0;
 unsigned Motor1Carpan;
 unsigned Motor2Carpan;
 unsigned int BeyazDongu=0;
 double SonSiyahSensorOrt;
 //Baþlangýç ayarlarý
-BaslangicTest();
+//BaslangicTest();
 
 //Kalibrasyon(255);//255=true,0=false
 //BaslangicTest();
+TRISA=0x00;//A çýkýþ
+for(i=0;i<10;i++)
+{
+  PORTA.B0=0;
+  Delay_ms(200);
+  PORTA.B0=1;
+  Delay_ms(200);
+}
 TRISC=0x00;//C çýkýþ
 PORTC=0x00;//Hepsi yüksek
 TRISB=0x00;//B çýkýþ
@@ -140,12 +149,18 @@ if(BeyazSensorSayisi>0 && BeyazSensorSayisi<8)
   PWM2_Set_Duty(Motor2Carpan);
   SonSiyahSensorOrt=sensorort;
   BeyazDongu=0;
+  PORTA.B0=1;
 }
 else
 {//Dur
   PWM1_Set_Duty(0);
   PWM2_Set_Duty(0);
   BeyazDongu++;
+  if((BeyazDongu/12)%2==0)
+     PORTA.B0=0;
+  else
+     PORTA.B0=1;
+  
 /*
   //Dönme iþlemi
   if(BeyazDongu>50)
